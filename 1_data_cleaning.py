@@ -25,6 +25,7 @@ metrics = df.groupby('sentiment_label').agg(
     avg_length=('text_length','mean'),
     avg_words=('word_count','mean')
 ).reset_index()
+metrics['completeness'] = data_completeness
 
 # 5. Save outputs for next steps
 df.to_csv('clean_sentiment.csv', index=False)

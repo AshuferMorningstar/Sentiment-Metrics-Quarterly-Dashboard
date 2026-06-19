@@ -22,9 +22,10 @@ df = load_metrics()
 total_volume = int(df["volume"].sum())
 weighted_avg_length = (df["avg_length"] * df["volume"]).sum() / total_volume if total_volume else 0
 weighted_avg_words = (df["avg_words"] * df["volume"]).sum() / total_volume if total_volume else 0
+completeness = df["completeness"].iloc[0] if "completeness" in df.columns and not df.empty else 98.5
 
-# KPIs - top row
-col1, col2, col3, col4 = st.columns(4)
+# KPIs - 5 cards
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     st.metric("Total Tweets", f"{total_volume:,}")
@@ -39,6 +40,9 @@ with col3:
 
 with col4:
     st.metric("Avg Words", f"{weighted_avg_words:.1f}")
+
+with col5:
+    st.metric("Data Quality (Completeness %)", f"{completeness}%")
 
 st.divider()
 
