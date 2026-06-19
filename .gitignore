@@ -1,3 +1,4 @@
-clean_sentiment.csv
 *.csv
+!clean_sentiment.csv
 !metrics.csv
+__pycache__/
