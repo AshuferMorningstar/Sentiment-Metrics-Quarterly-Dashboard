@@ -12,7 +12,7 @@ st.caption("Data pipeline: Sentiment140 → Clean → Metrics | Built for fintec
 @st.cache_data
 def load_metrics(file_signature: int):
     data = pd.read_csv("metrics.csv")
-    required_columns = {"sentiment_label", "volume", "avg_length", "avg_words"}
+    required_columns = {"sentiment_label", "volume", "avg_length", "avg_words", "completeness"}
     missing_columns = required_columns - set(data.columns)
     if missing_columns:
         raise ValueError(f"metrics.csv is missing columns: {', '.join(sorted(missing_columns))}")
@@ -53,13 +53,17 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Sentiment Distribution")
-    color_sequence = ["#ff4d4d", "#00c853", "#2962ff", "#ffb300", "#8e24aa"]
     fig = px.bar(
         df,
         x="sentiment_label",
         y="volume",
         color="sentiment_label",
-        color_discrete_sequence=color_sequence,
+        category_orders={"sentiment_label": ["Negative", "Neutral", "Positive"]},
+        color_discrete_map={
+            "Negative": "#ff4d4d",
+            "Neutral": "#ffb300",
+            "Positive": "#00c853",
+        },
         text="volume",
     )
     fig.update_layout(showlegend=False, yaxis_title="Tweets", xaxis_title="Sentiment")
@@ -78,6 +82,7 @@ with col2:
         x="sentiment_label",
         y="value",
         color="metric",
+        category_orders={"sentiment_label": ["Negative", "Neutral", "Positive"]},
         barmode="group",
         text_auto=".1f",
         color_discrete_sequence=["#2962ff", "#ffb300"],
