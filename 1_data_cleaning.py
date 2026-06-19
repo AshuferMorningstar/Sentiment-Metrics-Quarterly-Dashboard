@@ -1,11 +1,22 @@
 import kagglehub
 import pandas as pd
 
+SAMPLE_SIZE = 5000
+
 # Download Sentiment140 dataset using kagglehub
 path = kagglehub.dataset_download("kazanova/sentiment140")
 
-# 1. Load data - 5K rows for demo
-df = pd.read_csv(f"{path}/training.1600000.processed.noemoticon.csv", nrows=5000, encoding='latin-1', names=['target','id','date','flag','user','text'])
+# 1. Load data - balanced 5K-row demo sample
+source = pd.read_csv(
+    f"{path}/training.1600000.processed.noemoticon.csv",
+    usecols=['target', 'id', 'date', 'flag', 'user', 'text'],
+    encoding='latin-1',
+    header=None,
+    names=['target', 'id', 'date', 'flag', 'user', 'text'],
+)
+negative_sample = source[source['target'] == 0].sample(n=SAMPLE_SIZE // 2, random_state=42)
+positive_sample = source[source['target'] == 4].sample(n=SAMPLE_SIZE // 2, random_state=42)
+df = pd.concat([negative_sample, positive_sample], ignore_index=True).sample(frac=1, random_state=42).reset_index(drop=True)
 
 # 2. Data validation - track completeness
 initial_rows = len(df)  

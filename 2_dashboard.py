@@ -51,12 +51,13 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Sentiment Distribution")
+    color_sequence = ["#ff4d4d", "#00c853", "#2962ff", "#ffb300", "#8e24aa"]
     fig = px.bar(
         df,
         x="sentiment_label",
         y="volume",
         color="sentiment_label",
-        color_discrete_map={"Negative": "#ff4d4d", "Positive": "#00c853"},
+        color_discrete_sequence=color_sequence,
         text="volume",
     )
     fig.update_layout(showlegend=False, yaxis_title="Tweets", xaxis_title="Sentiment")
@@ -77,6 +78,7 @@ with col2:
         color="metric",
         barmode="group",
         text_auto=".1f",
+        color_discrete_sequence=["#2962ff", "#ffb300"],
     )
     fig2.update_layout(xaxis_title="Sentiment", yaxis_title="Average Value")
     st.plotly_chart(fig2, use_container_width=True)
