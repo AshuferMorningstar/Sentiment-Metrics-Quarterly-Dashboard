@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from pathlib import Path
 
 st.set_page_config(page_title="Sentiment Metrics Dashboard", layout="wide", page_icon="📊")
 
@@ -9,7 +10,7 @@ st.caption("Data pipeline: Sentiment140 → Clean → Metrics | Built for fintec
 
 # Load data
 @st.cache_data
-def load_metrics():
+def load_metrics(file_signature: int):
     data = pd.read_csv("metrics.csv")
     required_columns = {"sentiment_label", "volume", "avg_length", "avg_words"}
     missing_columns = required_columns - set(data.columns)
@@ -17,7 +18,8 @@ def load_metrics():
         raise ValueError(f"metrics.csv is missing columns: {', '.join(sorted(missing_columns))}")
     return data
 
-df = load_metrics()
+metrics_path = Path("metrics.csv")
+df = load_metrics(metrics_path.stat().st_mtime_ns if metrics_path.exists() else 0)
 
 total_volume = int(df["volume"].sum())
 weighted_avg_length = (df["avg_length"] * df["volume"]).sum() / total_volume if total_volume else 0
