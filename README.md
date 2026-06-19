@@ -1,45 +1,42 @@
 # Sentiment Metrics Quarterly Dashboard
+A lightweight data pipeline for fintech sentiment analysis. Built to process the Sentiment140 dataset with production-grade data quality checks.
 
-This repository contains a small data-cleaning pipeline for the Sentiment140 dataset. The main script downloads the dataset with `kagglehub`, cleans and enriches the text data, and writes dashboard-ready CSV outputs.
+### Pipeline Steps
+- Downloads the Sentiment140 dataset from Kaggle
+- Loads a sample of 5,000 rows for a quick demo run
+- Removes duplicate rows and rows with missing text
+- Adds `sentiment_label`, `text_length`, and `word_count` features
+- Aggregates sentiment metrics for reporting
+- Exports `clean_sentiment.csv` and `metrics.csv`
 
-## What It Does
+### Why This Matters for Fintech
+- **Data Quality**: Completeness % + validation checks mirror transaction data QC at scale
+- **Scalability**: kagglehub download avoids storing 800MB+ raw data - same pattern used for live transaction feeds
 
-- Downloads the Sentiment140 dataset from Kaggle.
-- Loads a sample of 5,000 rows for a quick demo run.
-- Removes duplicate rows and rows with missing text.
-- Adds `sentiment_label`, `text_length`, and `word_count` features.
-- Aggregates sentiment metrics for reporting.
-- Exports `clean_sentiment.csv` and `metrics.csv`.
-
-## Requirements
-
+### Requirements
 - Python 3.10 or newer
 - `pandas`
 - `kagglehub`
 
-Install the dependencies with:
+Install with:
 
 ```bash
 pip install pandas kagglehub
 ```
 
-## Usage
-
-Run the cleaning script from the project root:
+*Usage*
 
 ```bash
 python 1_data_cleaning.py
 ```
 
-The script will download the dataset on first run, clean the data, and print a completeness percentage plus the sentiment summary table.
+The script downloads the dataset, cleans data, and prints completeness % + sentiment summary.
 
-## Output Files
+*Output Files*
+- `clean_sentiment.csv`: cleaned row-level data (local only, not tracked)
+- `metrics.csv`: grouped sentiment metrics for dashboard
 
-- `clean_sentiment.csv`: cleaned row-level data with the derived features.
-- `metrics.csv`: grouped sentiment metrics for the dashboard.
-
-## Notes
-
-- The raw Sentiment140 CSV is downloaded locally during execution and should not be committed to the repository.
-- `metrics.csv` is the intended tracked CSV output.
-- If you want to change the sample size, update the `nrows=5000` value in `1_data_cleaning.py`.
+*Notes*
+- Raw `clean_sentiment.csv` is excluded via `.gitignore` to keep repo <100MB
+- `metrics.csv` is the tracked output for dashboard viz
+- To change sample size, update `nrows=5000` in `1_data_cleaning.py`
