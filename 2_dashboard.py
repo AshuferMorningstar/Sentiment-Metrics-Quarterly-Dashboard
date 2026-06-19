@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 st.set_page_config(page_title="Sentiment Metrics Dashboard", layout="wide", page_icon="📊")
 
@@ -21,8 +22,6 @@ df = load_metrics()
 total_volume = int(df["volume"].sum())
 weighted_avg_length = (df["avg_length"] * df["volume"]).sum() / total_volume if total_volume else 0
 weighted_avg_words = (df["avg_words"] * df["volume"]).sum() / total_volume if total_volume else 0
-
-chart_data = df.set_index("sentiment_label")[["volume"]]
 
 # KPIs - top row
 col1, col2, col3, col4 = st.columns(4)
@@ -48,11 +47,35 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Sentiment Distribution")
-    st.bar_chart(chart_data)
+    fig = px.bar(
+        df,
+        x="sentiment_label",
+        y="volume",
+        color="sentiment_label",
+        color_discrete_map={"Negative": "#ff4d4d", "Positive": "#00c853"},
+        text="volume",
+    )
+    fig.update_layout(showlegend=False, yaxis_title="Tweets", xaxis_title="Sentiment")
+    st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("Average Text Length and Word Count")
-    st.bar_chart(df.set_index("sentiment_label")[ ["avg_length", "avg_words"] ])
+    comparison = df.melt(
+        id_vars="sentiment_label",
+        value_vars=["avg_length", "avg_words"],
+        var_name="metric",
+        value_name="value",
+    )
+    fig2 = px.bar(
+        comparison,
+        x="sentiment_label",
+        y="value",
+        color="metric",
+        barmode="group",
+        text_auto=".1f",
+    )
+    fig2.update_layout(xaxis_title="Sentiment", yaxis_title="Average Value")
+    st.plotly_chart(fig2, use_container_width=True)
 
 st.divider()
 
