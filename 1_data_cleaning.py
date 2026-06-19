@@ -1,31 +1,17 @@
 import kagglehub
 import pandas as pd
-import re
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 SAMPLE_SIZE = 5000
 CLASS_ORDER = ['Negative', 'Neutral', 'Positive']
-
-POSITIVE_WORDS = {
-    'good', 'great', 'excellent', 'amazing', 'awesome', 'love', 'happy', 'win', 'wins', 'winning',
-    'best', 'fantastic', 'positive', 'enjoy', 'joy', 'beautiful', 'brilliant', 'nice', 'perfect',
-    'cool', 'wonderful', 'pleased', 'delight', 'success', 'successful', 'like'
-}
-
-NEGATIVE_WORDS = {
-    'bad', 'terrible', 'awful', 'hate', 'sad', 'angry', 'worst', 'poor', 'negative', 'fail',
-    'fails', 'failing', 'failure', 'ugly', 'horrible', 'pain', 'annoyed', 'disappointed', 'nasty',
-    'upset', 'unhappy', 'depressing', 'tired', 'sick', 'broken'
-}
+analyzer = SentimentIntensityAnalyzer()
 
 
-def label_sentiment(text: str) -> tuple[str, int]:
-    tokens = re.findall(r"[a-z']+", text.lower())
-    positive_hits = sum(token in POSITIVE_WORDS for token in tokens)
-    negative_hits = sum(token in NEGATIVE_WORDS for token in tokens)
-    score = positive_hits - negative_hits
-    if score > 0:
+def label_sentiment(text: str) -> tuple[str, float]:
+    score = analyzer.polarity_scores(text)['compound']
+    if score >= 0.05:
         return 'Positive', score
-    if score < 0:
+    if score <= -0.05:
         return 'Negative', score
     return 'Neutral', score
 
