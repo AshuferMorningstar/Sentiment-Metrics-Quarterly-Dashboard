@@ -95,5 +95,3 @@ st.divider()
 # Data table
 st.subheader("Metrics Table")
 st.dataframe(df, use_container_width=True)
-
-st.caption("Note: Data downloaded via kagglehub on runtime. Repo optimized to stay <100MB for GitHub limits.")
