@@ -13,10 +13,26 @@ A lightweight data pipeline for fintech sentiment analysis. Built to process the
 - **Data Quality**: Completeness % + validation checks mirror transaction data QC at scale
 - **Scalability**: kagglehub download avoids storing 800MB+ raw data - same pattern used for live transaction feeds
 
+### Dashboard
+View the live dashboard here: https://sentiment-metrics-quarterly-dashboard1.streamlit.app/#sentiment-distribution
+
+#### Screenshots
+
+1. Overview / KPIs
+
+<img src="assets/1st.png" alt="Sentiment dashboard overview" width="100%" />
+
+2. Charts / metrics
+
+<img src="assets/2nd.png" alt="Sentiment dashboard charts" width="100%" />
+
 ### Requirements
+
+
 - Python 3.10 or newer
 - `pandas`
 - `kagglehub`
+
 
 Install with:
 
